@@ -375,7 +375,17 @@ public class Esports_Frame extends javax.swing.JFrame {
     private void AddTeam_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTeam_ButtonActionPerformed
        int amount = TeamComboBox.getItemCount();
        int testbonk = 1;
-
+          
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
        if(amount !=6){
            TeamArray.add(amount, new TeamArray_test(amount,SelectedEventCombo.getItemCount()));
            TeamComboBox.addItem(TeamArray.get(amount).teamname);
