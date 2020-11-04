@@ -1,0 +1,62 @@
+development notes::
+worked on team class draft first
+then worked on adding and removing teams from combo box
+then worked on the is guest checkbox
+
+
+working on making it change to the state of the teams is_guest boolean
+
+finished fixing is_guest and have added failsafes to catch index out of range
+
+i have finished the team tab :)
+
+
+
+
+ive now added functionality to the selctedgamecombo box and allow it to set the game type to our teams event
+ive been working on the scoreboard and sycronizing the team names and hopefully the data between them. im pllanning to instead of setting up only 6 teams ill use a arraylsit and push one when i need to
+
+ive reworked how i do teams and have now put them into a arraylist, this means when i remove temas the class instance is actually removed from the array, and no longer accsessible by the program
+
+
+update on the issues:
+i had a issue with adding and removing teams from the event table so what i did was add and remove rows according to the amount of teams.
+
+
+//04/11/2020:
+im working on fixing the issue of when you click events it will throw errors.
+right so here is the issue:
+the issue is that when you change what event your on it will check o see what that events game type is.
+yet the game type is only set when selected .
+so when you goto a new event. it hasnt been initilized so it throws a error.
+
+///update!
+i fixed the issue by chnaging my teamarray setup to automatically initilize the events as notset. this stops the issue of initilization.
+ive also syncronized the selctedgamecombobox to the events variable causing it to just be more nicer and easier to use
+
+
+
+//another update
+ive also now intergrated github.
+this is kinda my first time using it in the sense of me pushing it online
+
+
+
+
+
+
+
+
+to me:
+want to have the metallic look
+maybe because of the java version : jdk 11:
+that it isnt included
+
+
+
+//notes on how im going to do something
+
+so 1st idea is for me to make a events class so i can organize the event data and multipliers
+second idea is just to horribly define globals variables and use them
+
+
