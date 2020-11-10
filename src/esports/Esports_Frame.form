@@ -332,7 +332,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SelectedGameComboActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="ArrayList&lt;String&gt; events = new ArrayList&lt;String&gt;(); &#xa;        for (game_type type : game_type.values()){&#xa;            events.add(type.toString());&#xa;            &#xa;        }&#xa;        SelectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new Vector&lt;String&gt;(events)));"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="ArrayList&lt;String&gt; events = new ArrayList&lt;String&gt;(); &#xa;        for (game_type type : game_type.values()){&#xa;            events.add(type.toString());&#xa;            &#xa;        }&#xa;        SelectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new Vector&lt;String&gt;(events)));&#xa;        //5 is the iindex for NotSet&#xa;        //this shows the user that by defualt nothing is set so this is what i want for the time being until i start to clean up code&#xa;        SelectedGameCombo.setSelectedIndex(5);"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -352,10 +352,10 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="4" rowCount="0">
-                        <Column editable="false" title="Team" type="java.lang.Object"/>
-                        <Column editable="true" title="Points" type="java.lang.Object"/>
-                        <Column editable="true" title="Score" type="java.lang.Object"/>
-                        <Column editable="false" title="Position" type="java.lang.Object"/>
+                        <Column editable="false" title="Team" type="java.lang.String"/>
+                        <Column editable="true" title="Points" type="java.lang.Integer"/>
+                        <Column editable="false" title="Score" type="java.lang.Integer"/>
+                        <Column editable="false" title="Position" type="java.lang.Integer"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -386,6 +386,10 @@
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="EventTableInputMethodTextChanged"/>
+                    <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="EventTablePropertyChange"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

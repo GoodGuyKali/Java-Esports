@@ -22,18 +22,22 @@ enum game_type{
 }
 class Events_test{
     game_type GameType;
-    int event_num;
-    int event_points;
-    int event_score;
-    int event_posistion;
+    int eventNumber;
+    int eventPoints;
+    int eventScore;
+    int eventPosistion;
     public Events_test(game_type typr){
         GameType = typr;
     }
-    public void CalculateScore(){
+    public void CalculateScore(javax.swing.JTable eventTable){
         //need to figure out the scoreing multiplier
         switch(GameType){
             case Overwatch:
+                if(eventPoints > 2)
+                    eventScore = 100;
+                eventTable.setValueAt(eventScore, eventTable.getSelectedRow(), 2);
                 break;
+            
             case CSGO:
                 break;
             case COD:
@@ -256,6 +260,9 @@ public class Esports_Frame extends javax.swing.JFrame {
 
         }
         SelectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector<String>(events)));
+        //5 is the iindex for NotSet
+        //this shows the user that by defualt nothing is set so this is what i want for the time being until i start to clean up code
+        SelectedGameCombo.setSelectedIndex(5);
         SelectedGameCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SelectedGameComboActionPerformed(evt);
@@ -272,12 +279,31 @@ public class Esports_Frame extends javax.swing.JFrame {
                 "Team", "Points", "Score", "Position"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, false
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        EventTable.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                EventTableInputMethodTextChanged(evt);
+            }
+        });
+        EventTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                EventTablePropertyChange(evt);
             }
         });
         EventsScrollPane.setViewportView(EventTable);
@@ -369,7 +395,6 @@ public class Esports_Frame extends javax.swing.JFrame {
         if(selected >= 0)
             IsGuest_checkbox.setSelected( TeamArray.get(selected).is_guest);
         
-        else{}
     }//GEN-LAST:event_TeamComboBoxActionPerformed
 
     private void AddTeam_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTeam_ButtonActionPerformed
@@ -403,10 +428,7 @@ public class Esports_Frame extends javax.swing.JFrame {
         for (game_type type : game_type.values())
             if(type.ordinal() == Selected_Game)
                  for(int i = 0;i < TeamArray.size();i++) 
-                    TeamArray.get(i).event_class[SelectedEventCombo.getSelectedIndex()].GameType = type;
-            
-        
-       
+                    TeamArray.get(i).event_class[SelectedEventCombo.getSelectedIndex()].GameType = type;       
     }//GEN-LAST:event_SelectedGameComboActionPerformed
 
     
@@ -414,7 +436,7 @@ public class Esports_Frame extends javax.swing.JFrame {
     private void ScoreboardPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ScoreboardPaneMouseClicked
 
     }//GEN-LAST:event_ScoreboardPaneMouseClicked
-//will be used but not just yet
+
     private void EventsPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EventsPanelMouseClicked
     }//GEN-LAST:event_EventsPanelMouseClicked
     private void ScoreboardPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ScoreboardPaneStateChanged
@@ -422,6 +444,7 @@ public class Esports_Frame extends javax.swing.JFrame {
         if(ScoreboardPane.getSelectedIndex() == 2){
             String Selected_event = (String)SelectedEventCombo.getSelectedItem();
             Event_Label.setText(Selected_event);
+
           //EventTable.setValueAt(object_test.get(i).teamname, object_test.get(i).index, NORMAL);
             
             
@@ -429,11 +452,28 @@ public class Esports_Frame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_ScoreboardPaneStateChanged
 
-    private void debug(){
-        for(int i = 0;i<= TeamArray.size();i++){
-            System.out.printf("object data :" );
-        }
-    }
+    private void EventTableInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_EventTableInputMethodTextChanged
+    }//GEN-LAST:event_EventTableInputMethodTextChanged
+
+    private void EventTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_EventTablePropertyChange
+
+       
+       if(EventTable.getColumnCount()>0 && EventTable.getRowCount()>0){      
+           
+          if(EventTable.getValueAt(EventTable.getSelectedRow(), EventTable.getSelectedColumn())!= null){
+              if(EventTable.getSelectedColumn() == 1){
+                  TeamArray.get(EventTable.getSelectedRow()).event_class[SelectedEventCombo.getSelectedIndex()].eventPoints= (int)EventTable.getValueAt(EventTable.getSelectedRow(), EventTable.getSelectedColumn());
+                  TeamArray.get(EventTable.getSelectedRow()).event_class[SelectedEventCombo.getSelectedIndex()].CalculateScore(EventTable);
+              }
+            //System.out.print("event data = "+ EventTable.getValueAt(EventTable.getSelectedRow(), EventTable.getSelectedColumn())
+           // + "\n"+ "team data inputted into: "+"\n");
+         }
+       }
+       
+
+        
+    }//GEN-LAST:event_EventTablePropertyChange
+
     /**
      * @param args the command line arguments
      */
