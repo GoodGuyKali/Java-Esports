@@ -5,7 +5,20 @@
  */
 package esports;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.DefaultRowSorter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -23,7 +36,7 @@ enum game_type{
     Apex,
     NotSet
 }
-class EventArray{
+class EventArray implements Serializable{
     game_type GameType;
     int eventNumber;
     int eventPoints;
@@ -40,7 +53,6 @@ class EventArray{
                 eventScore = eventPoints*10;
                 eventTable.setValueAt(eventScore, eventTable.getSelectedRow(), 2);
                 break;
-            
             case CSGO:
                 break;
             case COD:
@@ -48,9 +60,7 @@ class EventArray{
             case Valorant:
                 break;
             case Apex:
-                break;
-            
-                
+                break; 
         }
     }
 }
@@ -60,7 +70,7 @@ class PlayerData{
         PlayerName = name;
     }
 }
-class TeamArray{
+class TeamArray implements Serializable{
     int scoreboard_pos = 0;
     EventArray eventArray[] = new EventArray[6];
     ArrayList<PlayerData> PlayersData = new ArrayList<PlayerData>();
@@ -68,28 +78,25 @@ class TeamArray{
     String teamname;
     boolean is_guest = false;
     
-    public TeamArray(String Teamname,int size){
+    public TeamArray(
+            String Teamname,
+            int size
+    ){
         teamname = Teamname;
-        for (int i =0;i < size; i++){
+        for (int i =0;i < size; i++)
             eventArray[i]= new EventArray(game_type.NotSet);
-        }
-        
     }
-    
-
 }
 
 
 public class Esports_Frame extends javax.swing.JFrame {
-   // TeamArray_test object_test[] = new TeamArray_test[6];
+    //sets up a array for all teams to be held into
     ArrayList<TeamArray> myTeamArray = new ArrayList<TeamArray>();
     /**
      * Creates new form ESports_Frame
      */
     public Esports_Frame() {
         initComponents();
-
-       
     }
 
     /**
@@ -118,7 +125,7 @@ public class Esports_Frame extends javax.swing.JFrame {
         AddTeamPlayerButton = new javax.swing.JButton();
         RemoveTeamPlayerButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        TeamPlayerList = new javax.swing.JList<>();
         SelectedTeamLabel = new javax.swing.JLabel();
         EventsPanel = new javax.swing.JPanel();
         SelectedEventCombo = new javax.swing.JComboBox<>();
@@ -216,6 +223,9 @@ public class Esports_Frame extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TeamComboBoxMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                TeamComboBoxMouseReleased(evt);
+            }
         });
         TeamComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -256,12 +266,9 @@ public class Esports_Frame extends javax.swing.JFrame {
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        TeamPlayerList.setModel(new DefaultListModel()
+        );
+        jScrollPane1.setViewportView(TeamPlayerList);
 
         SelectedTeamLabel.setText("Selected Team");
 
@@ -273,26 +280,26 @@ public class Esports_Frame extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(TeamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(TeamPanelLayout.createSequentialGroup()
-                        .addComponent(SelectedTeamLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(TeamPanelLayout.createSequentialGroup()
                         .addGroup(TeamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(AddTeamPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(PlayerNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(RemoveTeamPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8))
-                    .addGroup(TeamPanelLayout.createSequentialGroup()
-                        .addComponent(AddTeam_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(RemoveTeam_Button))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TeamPanelLayout.createSequentialGroup()
                         .addComponent(TeamNameField1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                         .addComponent(IsGuest_checkbox, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(21, 21, 21)
                         .addComponent(TeamComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addGroup(TeamPanelLayout.createSequentialGroup()
+                        .addComponent(SelectedTeamLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(TeamPanelLayout.createSequentialGroup()
+                        .addComponent(AddTeam_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(RemoveTeam_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         TeamPanelLayout.setVerticalGroup(
@@ -441,10 +448,7 @@ public class Esports_Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
-    
-    
     private void SelectedEventComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectedEventComboActionPerformed
-
         String Selected_event = (String)SelectedEventCombo.getSelectedItem();
         Event_Label.setText(Selected_event);
         //this is because we only need to use one of the teams data since all of the teams game type gets set either way
@@ -457,8 +461,7 @@ public class Esports_Frame extends javax.swing.JFrame {
             EventTable.setValueAt(TestCase.eventPoints, i, 1);        
             EventTable.setValueAt(TestCase.eventScore, i, 2);        
             EventTable.setValueAt(TestCase.eventPosistion, i, 3);        
-        }
-        
+        }      
     }//GEN-LAST:event_SelectedEventComboActionPerformed
 
     private void RemoveTeam_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveTeam_ButtonActionPerformed
@@ -479,28 +482,32 @@ public class Esports_Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_IsGuest_checkboxActionPerformed
 
     private void TeamComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TeamComboBoxActionPerformed
-
         int selected = TeamComboBox.getSelectedIndex();
-        
         if(selected >= 0)
-            IsGuest_checkbox.setSelected(myTeamArray.get(selected).is_guest);
+            IsGuest_checkbox.setSelected( myTeamArray.get(selected).is_guest);
+       SelectedTeamLabel.setText(myTeamArray.get(selected).teamname+"'s Players");
         
+        //this needs to be fixed !!!!!!11
+      //  int amount =TeamPlayerList.getModel().getSize();
+     //   DefaultListModel ListModel = (DefaultListModel)TeamPlayerList.getModel();
+      //  ListModel.setElementAt(myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.get(0).PlayerName, 0);
     }//GEN-LAST:event_TeamComboBoxActionPerformed
 
     private void AddTeam_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTeam_ButtonActionPerformed
        
         
         int amount = TeamComboBox.getItemCount();
-        
-
+        if(!TeamNameField1.getText().isEmpty()){
            myTeamArray.add(amount, new TeamArray(TeamNameField1.getText(),SelectedEventCombo.getItemCount()));
-           TeamComboBox.addItem(myTeamArray.get(amount).teamname);
            myTeamArray.get(amount).is_guest = IsGuest_checkbox.isSelected();
-           System.out.println(myTeamArray.get(amount).is_guest);
+           TeamComboBox.addItem(myTeamArray.get(amount).teamname);
            TeamComboBox.setSelectedIndex(amount);
            javax.swing.table.DefaultTableModel test = (javax.swing.table.DefaultTableModel)EventTable.getModel();
            test.addRow(new Object[]{myTeamArray.get(amount).teamname}); 
-           
+        }
+        else{
+            System.out.println("please enter text");
+        }
     }//GEN-LAST:event_AddTeam_ButtonActionPerformed
 
     private void TeamComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TeamComboBoxMouseClicked
@@ -517,13 +524,6 @@ public class Esports_Frame extends javax.swing.JFrame {
                     myTeamArray.get(i).eventArray[SelectedEventCombo.getSelectedIndex()].GameType = type;    
        
         
-        int winnerIndex;
-        ArrayList sortingpoints = new ArrayList();
-        for(int j =0;j < myTeamArray.size();j++){
-
-            sortingpoints.add(myTeamArray.get(j).eventArray[SelectedEventCombo.getSelectedIndex()].eventPoints);
-            
-        }
    
        /*
        DefaultRowSorter sorter = ((DefaultRowSorter)EventTable.getRowSorter());
@@ -545,8 +545,6 @@ public class Esports_Frame extends javax.swing.JFrame {
        
     }//GEN-LAST:event_SelectedGameComboActionPerformed
 
-    
-    
     private void ScoreboardPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ScoreboardPaneMouseClicked
 
     }//GEN-LAST:event_ScoreboardPaneMouseClicked
@@ -554,39 +552,28 @@ public class Esports_Frame extends javax.swing.JFrame {
     private void EventsPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EventsPanelMouseClicked
     }//GEN-LAST:event_EventsPanelMouseClicked
     private void ScoreboardPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ScoreboardPaneStateChanged
-
         if(ScoreboardPane.getSelectedIndex() == 2){
             String Selected_event = (String)SelectedEventCombo.getSelectedItem();
-            Event_Label.setText(Selected_event);
-
-          //EventTable.setValueAt(object_test.get(i).teamname, object_test.get(i).index, NORMAL);
-            
-            
-        }
-        
+            Event_Label.setText(Selected_event);            
+        }       
     }//GEN-LAST:event_ScoreboardPaneStateChanged
 
     private void EventTableInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_EventTableInputMethodTextChanged
     }//GEN-LAST:event_EventTableInputMethodTextChanged
 
     private void EventTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_EventTablePropertyChange
-
-       
-       if(EventTable.getColumnCount()>0 && EventTable.getRowCount()>0){      
-           
-          if(EventTable.getValueAt(EventTable.getSelectedRow(), EventTable.getSelectedColumn())!= null){
-              if(EventTable.getSelectedColumn() == 1){
-                  myTeamArray.get(EventTable.getSelectedRow()).eventArray[SelectedEventCombo.getSelectedIndex()].eventPoints= (int)EventTable.getValueAt(EventTable.getSelectedRow(), EventTable.getSelectedColumn());
-                  myTeamArray.get(EventTable.getSelectedRow()).eventArray[SelectedEventCombo.getSelectedIndex()].CalculateScore(EventTable);
-                  
-              }
-            //System.out.print("event data = "+ EventTable.getValueAt(EventTable.getSelectedRow(), EventTable.getSelectedColumn())
-           // + "\n"+ "team data inputted into: "+"\n");
-         }
-       }
-       
-
+        int SelectedIndex = SelectedEventCombo.getSelectedIndex (),
+            SelectedRow   = EventTable        .getSelectedColumn(),
+            SelectedColum = EventTable        .getSelectedRow   (),
+            ColumCount    = EventTable        .getColumnCount   (),
+            RowCount      = EventTable        .getRowCount      ()
+        ;
         
+        if(ColumCount > 0 && RowCount > 0)    
+            if(EventTable.getValueAt(SelectedRow, SelectedColum)!= null && SelectedRow == 1){
+                myTeamArray.get(SelectedRow).eventArray[SelectedIndex].eventPoints = (int)EventTable.getValueAt(SelectedRow, SelectedColum);
+                myTeamArray.get(SelectedRow).eventArray[SelectedIndex].CalculateScore(EventTable);
+            } 
     }//GEN-LAST:event_EventTablePropertyChange
 
     private void TeamNameField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TeamNameField1ActionPerformed
@@ -599,11 +586,12 @@ public class Esports_Frame extends javax.swing.JFrame {
 
     private void AddTeamPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTeamPlayerButtonActionPerformed
 
-      //  int amount = TeamPlayerComboBox.getItemCount();
-
-         //  myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.add(amount,new PlayerData(PlayerNameTextField.getText()));
-           //TeamPlayerComboBox.addItem(myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.get(amount).PlayerName);
-           //TeamPlayerComboBox.setSelectedIndex(amount);
+        int amount =TeamPlayerList.getModel().getSize();
+        System.out.println("amount = "+ amount);
+        myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.add(amount,new PlayerData(PlayerNameTextField.getText()));
+        DefaultListModel ListModel = (DefaultListModel)TeamPlayerList.getModel();
+        ListModel.addElement(myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.get(amount).PlayerName);
+        TeamPlayerList.setSelectedIndex(TeamPlayerList.getModel().getSize());
     }//GEN-LAST:event_AddTeamPlayerButtonActionPerformed
 
     private void TeamNameField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TeamNameField1MouseClicked
@@ -612,38 +600,79 @@ public class Esports_Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_TeamNameField1MouseClicked
 
     private void RemoveTeamPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveTeamPlayerButtonActionPerformed
-        // TODO add your handling code here:
+
+
     }//GEN-LAST:event_RemoveTeamPlayerButtonActionPerformed
 
+    private void TeamComboBoxMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TeamComboBoxMouseReleased
+        
+    }//GEN-LAST:event_TeamComboBoxMouseReleased
+        /*
+        ArrayList<byte[]> list = new ArrayList<byte[]>();
+        try{
+            for(int i =0;i<myTeamArray.size();i++){
+                System.out.println("called");
+                TeamArray obj = myTeamArray.get(i);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
+                oos.writeObject(obj);
+                oos.flush();
+                list.add(bos.toByteArray());
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        try (FileOutputStream stream = new FileOutputStream("hi")) {
+
+             for(int i = 0 ; i < list.size();i++){
+                 stream.write(list.get(i));
+             }
+            } catch (IOException ex) {
+                Logger.getLogger(Esports_Frame.class.getName()).log(Level.SEVERE, null, ex);
+            }   
+        try {
+            byte[] array = Files.readAllBytes(Paths.get("\\\\CCNSAN01\\Data\\l37turner\\My Documents\\programming\\NetBeansProjects\\esports\\hi"));
+            for(int b=0;b < array.length;b++){
+                System.out.println(array[b]);
+            }
+            /*
+            ByteArrayInputStream in = new ByteArrayInputStream(data);
+            ObjectInputStream is = null;
+            try {
+            is = new ObjectInputStream(in);
+            } catch (IOException ex) {
+            Logger.getLogger(Esports_Frame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+            TeamArray object = (TeamArray)is.readObject();
+            System.out.println(object.eventArray[0].GameType);
+            } catch (IOException ex) {
+            Logger.getLogger(Esports_Frame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Esports_Frame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Esports_Frame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        */
+        
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                System.out.println(info.getName());
-               
-                if ("Metal".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Esports_Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Esports_Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Esports_Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Esports_Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
+        //sets the look and feel
+         try {
+                javax.swing.UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -674,7 +703,7 @@ public class Esports_Frame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> TeamComboBox;
     private javax.swing.JTextField TeamNameField1;
     private javax.swing.JPanel TeamPanel;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JList<String> TeamPlayerList;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
