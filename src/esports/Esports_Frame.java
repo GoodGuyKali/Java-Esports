@@ -5,6 +5,8 @@
  */
 package esports;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -72,9 +74,9 @@ class PlayerData{
 }
 class TeamArray implements Serializable{
     int scoreboard_pos = 0;
-    EventArray eventArray[] = new EventArray[5];
+    EventArray eventArray[] = new EventArray[6];
     ArrayList<PlayerData> PlayersData = new ArrayList<PlayerData>();
-    
+
     String teamname;
     boolean is_guest = false;
     
@@ -220,45 +222,21 @@ public class Esports_Frame extends javax.swing.JFrame {
 
         TeamComboBox.setModel(new javax.swing.DefaultComboBoxModel<>());
         TeamComboBox.setToolTipText("bonk");
-        TeamComboBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                TeamComboBoxItemStateChanged(evt);
-            }
-        });
-        TeamComboBox.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-                TeamComboBoxAncestorMoved(evt);
-            }
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-        });
-        TeamComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                TeamComboBoxMouseClicked(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                TeamComboBoxMouseReleased(evt);
-            }
-        });
         TeamComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TeamComboBoxActionPerformed(evt);
             }
         });
-        TeamComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                TeamComboBoxPropertyChange(evt);
-            }
-        });
-        TeamComboBox.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
-            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
-                TeamComboBoxVetoableChange(evt);
-            }
-        });
 
         TeamNameField1.setText("Team Name");
+        TeamNameField1.addKeyListener(new KeyAdapter(){
+            @Override
+            //this is to stop the typer making their name stupidly long
+            public void keyTyped(KeyEvent e){
+                if(TeamNameField1.getText().length() >= 24)
+                e.consume();
+            }
+        });
         TeamNameField1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TeamNameField1MouseClicked(evt);
@@ -271,6 +249,14 @@ public class Esports_Frame extends javax.swing.JFrame {
         });
 
         PlayerNameTextField.setText("Player Name");
+        PlayerNameTextField.addKeyListener(new KeyAdapter(){
+            @Override
+            //this is to stop the typer making their name stupidly long
+            public void keyTyped(KeyEvent e){
+                if(PlayerNameTextField.getText().length() >= 24)
+                e.consume();
+            }
+        });
         PlayerNameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PlayerNameTextFieldActionPerformed(evt);
@@ -525,20 +511,14 @@ public class Esports_Frame extends javax.swing.JFrame {
             IsGuest_checkbox.setSelected( myTeamArray.get(selected).is_guest);
        SelectedTeamLabel.setText(myTeamArray.get(selected).teamname+"'s Players");
         
-        //this needs to be fixed !!!!!!11
-      //  int amount =TeamPlayerList.getModel().getSize();
+
+       
       DefaultListModel ListModel = (DefaultListModel)TeamPlayerList.getModel();
       ListModel.clear();
-        
-      if(myTeamArray.get(selected).PlayersData.size() > 0){
-          for(int i = 0; i < myTeamArray.get(selected).PlayersData.size(); i++){
-              
-          ListModel.addElement(myTeamArray.get(selected).PlayersData.get(i).PlayerName);
-          }
-      }
-    
-        
-       
+      if(myTeamArray.get(selected).PlayersData.size() > 0)
+          for(int i = 0; i < myTeamArray.get(selected).PlayersData.size(); i++)
+              ListModel.addElement(myTeamArray.get(selected).PlayersData.get(i).PlayerName);
+      
     }//GEN-LAST:event_TeamComboBoxActionPerformed
 
     private void AddTeam_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTeam_ButtonActionPerformed
@@ -557,11 +537,6 @@ public class Esports_Frame extends javax.swing.JFrame {
             System.out.println("please enter text");
         }
     }//GEN-LAST:event_AddTeam_ButtonActionPerformed
-
-    private void TeamComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TeamComboBoxMouseClicked
-      
-
-    }//GEN-LAST:event_TeamComboBoxMouseClicked
 
     private void SelectedGameComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectedGameComboActionPerformed
         int Selected_Game = SelectedGameCombo.getSelectedIndex();
@@ -611,17 +586,19 @@ public class Esports_Frame extends javax.swing.JFrame {
 
     private void EventTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_EventTablePropertyChange
         int SelectedIndex = SelectedEventCombo.getSelectedIndex (),
-            SelectedRow   = EventTable        .getSelectedColumn(),
-            SelectedColum = EventTable        .getSelectedRow   (),
+            SelectedRow   = EventTable        .getSelectedRow(),
+            SelectedColum = EventTable        .getSelectedColumn(),
             ColumCount    = EventTable        .getColumnCount   (),
             RowCount      = EventTable        .getRowCount      ()
         ;
         
-        if(ColumCount > 0 && RowCount > 0)    
-            if(EventTable.getValueAt(SelectedRow, SelectedColum)!= null && SelectedRow == 1){
+        if(ColumCount > 0 && RowCount > 0){ 
+            if(EventTable.getValueAt(SelectedRow, SelectedColum) != null 
+                && SelectedColum == 1){
                 myTeamArray.get(SelectedRow).eventArray[SelectedIndex].eventPoints = (int)EventTable.getValueAt(SelectedRow, SelectedColum);
                 myTeamArray.get(SelectedRow).eventArray[SelectedIndex].CalculateScore(EventTable);
             } 
+        }
     }//GEN-LAST:event_EventTablePropertyChange
 
     private void TeamNameField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TeamNameField1ActionPerformed
@@ -635,11 +612,13 @@ public class Esports_Frame extends javax.swing.JFrame {
     private void AddTeamPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTeamPlayerButtonActionPerformed
 
         int amount =TeamPlayerList.getModel().getSize();
-        System.out.println("amount = "+ amount);
-        myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.add(amount,new PlayerData(PlayerNameTextField.getText()));
-        DefaultListModel ListModel = (DefaultListModel)TeamPlayerList.getModel();
-        ListModel.addElement(myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.get(amount).PlayerName);
-        TeamPlayerList.setSelectedIndex(amount);
+        if(amount < 5){
+            myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.add(amount,new PlayerData(PlayerNameTextField.getText()));
+            DefaultListModel ListModel = (DefaultListModel)TeamPlayerList.getModel();
+            ListModel.addElement(myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.get(amount).PlayerName);
+            TeamPlayerList.setSelectedIndex(amount);
+        }
+        
     }//GEN-LAST:event_AddTeamPlayerButtonActionPerformed
 
     private void TeamNameField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TeamNameField1MouseClicked
@@ -649,28 +628,13 @@ public class Esports_Frame extends javax.swing.JFrame {
 
     private void RemoveTeamPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveTeamPlayerButtonActionPerformed
 
-
+        int selectedTeam = TeamComboBox.getSelectedIndex();
+        if(selectedTeam >= 0){
+            DefaultListModel ListModel = (DefaultListModel)TeamPlayerList.getModel();
+            ListModel.removeElementAt(TeamPlayerList.getSelectedIndex());
+            myTeamArray.get(TeamComboBox.getSelectedIndex()).PlayersData.remove(0);
+        }
     }//GEN-LAST:event_RemoveTeamPlayerButtonActionPerformed
-
-    private void TeamComboBoxMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TeamComboBoxMouseReleased
-        
-    }//GEN-LAST:event_TeamComboBoxMouseReleased
-
-    private void TeamComboBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_TeamComboBoxPropertyChange
-
-        
-    }//GEN-LAST:event_TeamComboBoxPropertyChange
-
-    private void TeamComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_TeamComboBoxItemStateChanged
-       
-    }//GEN-LAST:event_TeamComboBoxItemStateChanged
-
-    private void TeamComboBoxVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_TeamComboBoxVetoableChange
-    }//GEN-LAST:event_TeamComboBoxVetoableChange
-
-    private void TeamComboBoxAncestorMoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_TeamComboBoxAncestorMoved
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TeamComboBoxAncestorMoved
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 

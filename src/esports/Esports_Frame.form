@@ -290,13 +290,7 @@
                 <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value=""/>
               </AccessibilityProperties>
               <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="TeamComboBoxItemStateChanged"/>
-                <EventHandler event="ancestorMoved" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="TeamComboBoxAncestorMoved"/>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TeamComboBoxMouseClicked"/>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TeamComboBoxMouseReleased"/>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TeamComboBoxActionPerformed"/>
-                <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="TeamComboBoxPropertyChange"/>
-                <EventHandler event="vetoableChange" listener="java.beans.VetoableChangeListener" parameters="java.beans.PropertyChangeEvent" handler="TeamComboBoxVetoableChange"/>
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -310,6 +304,9 @@
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TeamNameField1MouseClicked"/>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TeamNameField1ActionPerformed"/>
               </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="TeamNameField1.addKeyListener(new KeyAdapter(){&#xa;        @Override&#xa;        //this is to stop the typer making their name stupidly long&#xa;        public void keyTyped(KeyEvent e){&#xa;            if(TeamNameField1.getText().length() &gt;= 24)&#xa;                e.consume();&#xa;        }&#xa;        });"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JTextField" name="PlayerNameTextField">
               <Properties>
@@ -318,6 +315,9 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PlayerNameTextFieldActionPerformed"/>
               </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="PlayerNameTextField.addKeyListener(new KeyAdapter(){&#xa;        @Override&#xa;        //this is to stop the typer making their name stupidly long&#xa;        public void keyTyped(KeyEvent e){&#xa;            if(PlayerNameTextField.getText().length() &gt;= 24)&#xa;                e.consume();&#xa;        }&#xa;        });"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JButton" name="AddTeamPlayerButton">
               <Properties>
