@@ -45,18 +45,25 @@ this is kinda my first time using it in the sense of me pushing it online
 
 
 
+//09/11/2020
+im working on how to give data to my event class and pass user input
+also working on seting table data to equal event data also
+
+its was a very simple job to implement data since only one colums is able to be edited , but at the time i forgot this and over complicated my work
 
 
-to me:
-want to have the metallic look
-maybe because of the java version : jdk 11:
-that it isnt included
+//10/11/2020
+
+im adding the option to define all players inside of the team and am reworking the team tab to fit this.
+i may change it to a popup in the near future.
 
 
-
-//notes on how im going to do something
-
-so 1st idea is for me to make a events class so i can organize the event data and multipliers
-second idea is just to horribly define globals variables and use them
+//11/11/2020
+ive fixed a issue with the guest checkbox due to it being not in the right place and im adding functionality to player list
 
 
+//16/11/2020
+im now working on the players for each team since ive got issues with how ive implemented it.
+
+//17/11/2020
+i have implemented teams to allow seperate players and have also fixed a few bugs. look at github to see.
