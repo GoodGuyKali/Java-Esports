@@ -121,9 +121,9 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="348" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                  <Component id="eventsPanel" alignment="1" pref="348" max="32767" attributes="0"/>
+                  <Component id="eventsPanel" alignment="1" pref="350" max="32767" attributes="0"/>
               </Group>
               <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
@@ -140,7 +140,7 @@
               <Group type="103" rootIndex="4" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="teamInfoPanel" pref="336" max="32767" attributes="0"/>
+                      <Component id="teamInfoPanel" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -153,9 +153,19 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="ScoreScrollPane" pref="491" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="ScoreScrollPane" alignment="0" pref="491" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="calculateWinnerButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel2" min="-2" pref="209" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="282" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -163,9 +173,13 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="68" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="ScoreScrollPane" min="-2" pref="243" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="calculateWinnerButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="41" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -180,6 +194,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTable" name="scoreTable">
                   <Properties>
+                    <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="8" rowCount="0">
                         <Column editable="false" title="Team" type="java.lang.String"/>
@@ -241,12 +256,26 @@
                     </Property>
                     <Property name="name" type="java.lang.String" value="" noResource="true"/>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                      <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                     </Property>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JLabel" name="jLabel2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel2"/>
+                <Property name="doubleBuffered" type="boolean" value="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="calculateWinnerButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Calculate Winner"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="calculateWinnerButtonActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="eventsPanel">
@@ -262,21 +291,23 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Component id="EventsScrollPane" min="-2" pref="452" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="eventLabel" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="selectedEventCombo" min="-2" pref="102" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="184" max="-2" attributes="0"/>
+                                      <Component id="selectedGameCombo" min="-2" pref="102" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="0" pref="103" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="Event_Label" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="SelectedEventCombo" min="-2" pref="102" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="184" max="-2" attributes="0"/>
-                              <Component id="SelectedGameCombo" min="-2" pref="102" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="eventsScrollPane" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="49" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -285,20 +316,20 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="SelectedEventCombo" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                          <Component id="SelectedGameCombo" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="selectedEventCombo" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="selectedGameCombo" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="Event_Label" min="-2" pref="24" max="-2" attributes="0"/>
+                      <Component id="eventLabel" min="-2" pref="24" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="EventsScrollPane" min="-2" pref="244" max="-2" attributes="0"/>
+                      <Component id="eventsScrollPane" min="-2" pref="244" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JComboBox" name="SelectedEventCombo">
+            <Component class="javax.swing.JComboBox" name="selectedEventCombo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="5">
@@ -311,49 +342,67 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SelectedEventComboActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectedEventComboActionPerformed"/>
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JComboBox" name="SelectedGameCombo">
+            <Component class="javax.swing.JComboBox" name="selectedGameCombo">
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SelectedGameComboActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectedGameComboActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="ArrayList&lt;String&gt; events = new ArrayList&lt;String&gt;(); &#xa;        for (game_type type : game_type.values()){&#xa;            events.add(type.toString());&#xa;            &#xa;        }&#xa;        SelectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new Vector&lt;String&gt;(events)));&#xa;        //5 is the iindex for NotSet&#xa;        //this shows the user that by defualt nothing is set so this is what i want for the time being until i start to clean up code&#xa;        SelectedGameCombo.setSelectedIndex(5);"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="ArrayList&lt;String&gt; events = new ArrayList&lt;String&gt;(); &#xa;        for (game_type type : game_type.values()){&#xa;            events.add(type.toString());&#xa;            &#xa;        }&#xa;        selectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new Vector&lt;String&gt;(events)));&#xa;        //5 is the iindex for NotSet&#xa;        //this shows the user that by defualt nothing is set so this is what i want for the time being until i start to clean up code&#xa;        selectedGameCombo.setSelectedIndex(5);"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JLabel" name="Event_Label">
+            <Component class="javax.swing.JLabel" name="eventLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Event"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="EventsScrollPane">
+            <Container class="javax.swing.JScrollPane" name="eventsScrollPane">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="EventTable">
+                <Component class="javax.swing.JTable" name="eventTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="0">
+                      <Table columnCount="3" rowCount="0">
                         <Column editable="false" title="Team" type="java.lang.String"/>
                         <Column editable="true" title="Points" type="java.lang.Long"/>
                         <Column editable="false" title="Score" type="java.lang.Long"/>
-                        <Column editable="false" title="Position" type="java.lang.Integer"/>
                       </Table>
+                    </Property>
+                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                      <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                      </TableColumnModel>
                     </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                       <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="EventTablePropertyChange"/>
+                    <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="eventTablePropertyChange"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -370,37 +419,37 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="TeamNameField1" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
-                                  <Component id="AddTeam_Button" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="teamNameField" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="addTeamButton" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="IsGuest_checkbox" alignment="1" min="-2" pref="152" max="-2" attributes="0"/>
+                                  <Component id="isGuestCheckbox" alignment="1" min="-2" pref="152" max="-2" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="saveButton" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="LoadButton" min="-2" max="-2" attributes="0"/>
+                                      <Component id="loadButton" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="TeamComboBox" min="-2" pref="152" max="-2" attributes="0"/>
+                                      <Component id="teamComboBox" min="-2" pref="152" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="RemoveTeam_Button" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="removeTeamButton" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="AddTeamPlayerButton" min="-2" pref="152" max="-2" attributes="0"/>
+                              <Component id="addTeamPlayerButton" min="-2" pref="152" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="RemoveTeamPlayerButton" min="-2" pref="152" max="-2" attributes="0"/>
+                              <Component id="removeTeamPlayerButton" min="-2" pref="152" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                   <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="SelectedTeamLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="PlayerNameTextField" alignment="0" pref="152" max="32767" attributes="0"/>
+                                  <Component id="selectedTeamLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="playerNameTextField" alignment="0" pref="152" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -418,22 +467,22 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="TeamComboBox" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                          <Component id="TeamNameField1" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                          <Component id="IsGuest_checkbox" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="teamComboBox" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="teamNameField" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="isGuestCheckbox" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="AddTeam_Button" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="addTeamButton" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                              <Component id="RemoveTeam_Button" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                              <Component id="LoadButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="removeTeamButton" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                              <Component id="loadButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="SelectedTeamLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="selectedTeamLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="bioLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -441,14 +490,14 @@
                           <Group type="102" attributes="0">
                               <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="PlayerNameTextField" min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="playerNameTextField" min="-2" pref="31" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane4" pref="167" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="RemoveTeamPlayerButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="AddTeamPlayerButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="removeTeamPlayerButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="addTeamPlayerButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                   </Group>
@@ -456,7 +505,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JCheckBox" name="IsGuest_checkbox">
+            <Component class="javax.swing.JCheckBox" name="isGuestCheckbox">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
@@ -470,23 +519,23 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="AddTeam_Button">
+            <Component class="javax.swing.JButton" name="addTeamButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add Team"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddTeam_ButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addTeamButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="RemoveTeam_Button">
+            <Component class="javax.swing.JButton" name="removeTeamButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Remove Selected Team"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RemoveTeam_ButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeTeamButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JComboBox" name="TeamComboBox">
+            <Component class="javax.swing.JComboBox" name="teamComboBox">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;()" type="code"/>
@@ -494,50 +543,50 @@
                 <Property name="toolTipText" type="java.lang.String" value="Selected team to edit"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TeamComboBoxActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="teamComboBoxActionPerformed"/>
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JTextField" name="TeamNameField1">
+            <Component class="javax.swing.JTextField" name="teamNameField">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Team Name"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TeamNameField1MouseClicked"/>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TeamNameField1ActionPerformed"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="teamNameFieldMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="teamNameFieldActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="TeamNameField1.addKeyListener(new KeyAdapter(){&#xa;        @Override&#xa;        //this is to stop the typer making their name stupidly long&#xa;        public void keyTyped(KeyEvent e){&#xa;            if(TeamNameField1.getText().length() &gt;= 24)&#xa;                e.consume();&#xa;        }&#xa;        });"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="teamNameField.addKeyListener(new KeyAdapter(){&#xa;        @Override&#xa;        //this is to stop the typer making their name stupidly long&#xa;        public void keyTyped(KeyEvent e){&#xa;            if(teamNameField.getText().length() &gt;= 24)&#xa;                e.consume();&#xa;        }&#xa;        });"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JTextField" name="PlayerNameTextField">
+            <Component class="javax.swing.JTextField" name="playerNameTextField">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Player Name"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="PlayerNameTextFieldMouseClicked"/>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PlayerNameTextFieldActionPerformed"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="playerNameTextFieldMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="playerNameTextFieldActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="PlayerNameTextField.addKeyListener(new KeyAdapter(){&#xa;        @Override&#xa;        //this is to stop the typer making their name stupidly long&#xa;        public void keyTyped(KeyEvent e){&#xa;            if(PlayerNameTextField.getText().length() &gt;= 24)&#xa;                e.consume();&#xa;        }&#xa;        });"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="playerNameTextField.addKeyListener(new KeyAdapter(){&#xa;        @Override&#xa;        //this is to stop the typer making their name stupidly long&#xa;        public void keyTyped(KeyEvent e){&#xa;            if(playerNameTextField.getText().length() &gt;= 24)&#xa;                e.consume();&#xa;        }&#xa;        });"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="AddTeamPlayerButton">
+            <Component class="javax.swing.JButton" name="addTeamPlayerButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add Player"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddTeamPlayerButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addTeamPlayerButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="RemoveTeamPlayerButton">
+            <Component class="javax.swing.JButton" name="removeTeamPlayerButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Remove  Player"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RemoveTeamPlayerButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeTeamPlayerButtonActionPerformed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -547,7 +596,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="TeamPlayerList">
+                <Component class="javax.swing.JList" name="teamPlayerList">
                   <Properties>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="new DefaultListModel()&#xa;" type="code"/>
@@ -560,7 +609,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="SelectedTeamLabel">
+            <Component class="javax.swing.JLabel" name="selectedTeamLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="&quot;Selected Team&quot;" type="code"/>
@@ -575,12 +624,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="LoadButton">
+            <Component class="javax.swing.JButton" name="loadButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Load Data"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LoadButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadButtonActionPerformed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane4">
