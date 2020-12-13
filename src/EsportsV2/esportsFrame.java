@@ -42,10 +42,11 @@ class EventArray implements Serializable{
         GameType = typr;
     }
     public void calculateScore(javax.swing.JTable eventTable){
-        //need to figure out the scoreing multiplier
+        //these multipliers i would recomend that the esports organisers
+        //mess with them until they find ones that they like
+        //or i may add a config file holding multipliers
         switch(GameType){
             case Overwatch:
-                //this is all a test case, not a valid function!
                 eventScore = eventPoints*6;
                 eventTable.setValueAt(eventScore, eventTable.getSelectedRow(), 2);
                 break;
@@ -75,16 +76,16 @@ class PlayerData implements Serializable{
         playerName = name;
     }
 }
-class TeamArray implements Serializable{
+class TeamClass implements Serializable{
     int scoreboardPos = 0;
     int overallScore=0;
-    EventArray eventArray[] = new EventArray[6];
+    EventArray eventArray[] = new EventArray[5];
     ArrayList<PlayerData> playersData = new ArrayList<>();
     String teamName;
     String teamBio;
     boolean is_guest = false;
     
-    public TeamArray(String Teamname){
+    public TeamClass(String Teamname){
         teamName = Teamname;
         for (int i =0;i < eventArray.length; i++){
             eventArray[i]= new EventArray(game_type.NotSet);
@@ -106,13 +107,13 @@ class TeamArray implements Serializable{
  * @author l37turner
  */
 public class esportsFrame extends javax.swing.JFrame {
-    ArrayList<TeamArray> myTeamArray = new ArrayList<>();
+    ArrayList<TeamClass> myTeamArray = new ArrayList<>();
 
     /**
      *
      */
     public void updateAllOverallScores(){
-        for(TeamArray test : myTeamArray){
+        for(TeamClass test : myTeamArray){
             if(!test.is_guest){
                 test.calculateOverallScore();
             }
@@ -443,9 +444,9 @@ public class esportsFrame extends javax.swing.JFrame {
 
         editBioTextArea.setColumns(20);
         editBioTextArea.setRows(5);
-        editBioTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                editBioTextAreaKeyPressed(evt);
+        editBioTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                editBioTextAreaFocusLost(evt);
             }
         });
         jScrollPane4.setViewportView(editBioTextArea);
@@ -675,12 +676,12 @@ public class esportsFrame extends javax.swing.JFrame {
     private void PostTeamData(){
         int amount = teamComboBox.getItemCount();
         if(!teamNameField.getText().isEmpty()){
-            for(TeamArray checkName : myTeamArray){
+            for(TeamClass checkName : myTeamArray){
                 if(checkName.teamName.equals(teamNameField.getText())){
                     return;
                 }
             }            
-            myTeamArray.add(amount, new TeamArray(teamNameField.getText()));
+            myTeamArray.add(amount, new TeamClass(teamNameField.getText()));
             myTeamArray.get(amount).is_guest = isGuestCheckbox.isSelected();
             teamComboBox.addItem(myTeamArray.get(amount).teamName);
             teamComboBox.setSelectedIndex(amount);
@@ -713,6 +714,8 @@ public class esportsFrame extends javax.swing.JFrame {
             FileOutputStream fileout = new FileOutputStream(FileName);
             ObjectOutputStream objectout = new ObjectOutputStream(fileout);
             objectout.writeObject(myTeamArray);
+            objectout.close();
+            fileout.close();
         }
         catch(Exception e){}
     }
@@ -721,18 +724,21 @@ public class esportsFrame extends javax.swing.JFrame {
         try {
             FileInputStream in = new FileInputStream(FileName);
             ObjectInputStream is = new ObjectInputStream(in);
-            ArrayList<TeamArray> SavedTeamArray = new ArrayList<>();
-            SavedTeamArray=(ArrayList<TeamArray>)is.readObject();
             myTeamArray.clear();
-            myTeamArray = SavedTeamArray;
+            teamComboBox.removeAllItems();
+            myTeamArray = (ArrayList<TeamClass>)is.readObject();
             for(int amount = 0;amount < myTeamArray.size();amount++){
                 teamComboBox.addItem(myTeamArray.get(amount).teamName);
                 teamComboBox.setSelectedIndex(amount);
-                javax.swing.table.DefaultTableModel test = (javax.swing.table.DefaultTableModel)eventTable.getModel();
-                test.addRow(new Object[]{myTeamArray.get(amount).teamName}); 
-                //TeamNameField1.setText("");
+                javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)eventTable.getModel();
+                tableModel.addRow(new Object[]{myTeamArray.get(amount).teamName}); 
             }
-        }catch(Exception e){}
+            in.close();
+            is.close();
+            
+        }catch(Exception e){
+            System.out.println(e.getStackTrace());
+        }
     }
     
     //remove
@@ -771,7 +777,9 @@ public class esportsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_selectedEventComboActionPerformed
 
     private void selectedGameComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedGameComboActionPerformed
-        int Selected_Game = selectedGameCombo.getSelectedIndex();
+       int Selected_Game = selectedGameCombo.getSelectedIndex();
+        //gets the int type of our game type and then converts our selected index
+        //to it
         for (game_type type : game_type.values()){
             if(type.ordinal() == Selected_Game){
                 for(int i = 0;i < myTeamArray.size();i++){
@@ -805,10 +813,10 @@ public class esportsFrame extends javax.swing.JFrame {
     private void removeTeamButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTeamButtonActionPerformed
         int selected = teamComboBox.getSelectedIndex();
         if(selected >= 0){
-            teamComboBox.removeItemAt(selected);
             myTeamArray.remove(selected);
-            javax.swing.table.DefaultTableModel test = (javax.swing.table.DefaultTableModel)eventTable.getModel();
-            test.removeRow(selected);
+            teamComboBox.removeItemAt(selected);
+            javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)eventTable.getModel();
+            tableModel.removeRow(selected);
         }
     }//GEN-LAST:event_removeTeamButtonActionPerformed
 
@@ -816,7 +824,7 @@ public class esportsFrame extends javax.swing.JFrame {
         int selected = teamComboBox.getSelectedIndex();
         //checks if ive just removed a team and now its null
         if(selected >= 0){
-            TeamArray selectedTeam = myTeamArray.get(selected);
+            TeamClass selectedTeam = myTeamArray.get(selected);
             isGuestCheckbox.setSelected(selectedTeam.is_guest);
             selectedTeamLabel.setText(selectedTeam.teamName+"'s Players");
             bioLabel.setText(selectedTeam.teamName+"'s Bio");
@@ -852,8 +860,7 @@ public class esportsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addTeamPlayerButtonActionPerformed
 
     private void removeTeamPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTeamPlayerButtonActionPerformed
-
-        int selectedTeam = teamComboBox.getSelectedIndex();
+int selectedTeam = teamComboBox.getSelectedIndex();
         if(selectedTeam == -1){
             System.out.println("please select a Team");
         }
@@ -876,15 +883,35 @@ public class esportsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_loadButtonActionPerformed
 
     private void scoreboardMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scoreboardMenuMouseClicked
-        eventsPanel.setVisible(false);
+       eventsPanel.setVisible(false);
         teamPanel.setVisible(false);
         teamInfoPanel.setVisible(false);
-        javax.swing.table.DefaultTableModel test = (javax.swing.table.DefaultTableModel)scoreTable.getModel();
-
+        //seting this up so its modular :)
+        //and so when things get rearranged it will not delete the wrong one.
+        //this can be solved by using hasmaps but at the time of writing the myTeamArray
+        //i forgot that java had them
+        scoreTable.setModel(new javax.swing.table.DefaultTableModel(new Object [][] {},
+                new String [] {
+                    "Team", "Event 1", "Event 2", "Event 3", "Event 4", "Event 5", "Total", "Posistion"
+                }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)scoreTable.getModel();
         for(int i = 0; i < myTeamArray.size();i++){
-            TeamArray team = myTeamArray.get(i);
-            if(i >= scoreTable.getRowCount()){
-                test.addRow(new Object[]{team.teamName,
+            TeamClass team = myTeamArray.get(i);
+             tableModel.addRow(new Object[]{team.teamName,
                     team.eventArray[0].eventScore,
                     team.eventArray[1].eventScore,
                     team.eventArray[2].eventScore,
@@ -893,17 +920,6 @@ public class esportsFrame extends javax.swing.JFrame {
                     team.overallScore,
                     team.scoreboardPos
                 });
-            }
-            else{
-                scoreTable.setValueAt(team.teamName, i, 0);
-                scoreTable.setValueAt(team.eventArray[0].eventScore,i,1);
-                scoreTable.setValueAt(team.eventArray[1].eventScore,i,2);
-                scoreTable.setValueAt(team.eventArray[2].eventScore,i,3);
-                scoreTable.setValueAt(team.eventArray[3].eventScore,i,4);
-                scoreTable.setValueAt(team.eventArray[4].eventScore,i,5);
-                scoreTable.setValueAt(team.overallScore,i,6);
-                scoreTable.setValueAt(team.scoreboardPos, i, 7);
-            }
         }
         scorePanel.setVisible(true);
     }//GEN-LAST:event_scoreboardMenuMouseClicked
@@ -924,15 +940,6 @@ public class esportsFrame extends javax.swing.JFrame {
         teamInfoPanel.setVisible(false);
     }//GEN-LAST:event_editTeamDataItemActionPerformed
 
-    private void editBioTextAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editBioTextAreaKeyPressed
-        int selected = teamComboBox.getSelectedIndex();
-        //checks if ive just removed a team and now its null
-        if(selected >= 0){
-            myTeamArray.get(selected).teamBio=editBioTextArea.getText();
-        }
-        
-    }//GEN-LAST:event_editBioTextAreaKeyPressed
-
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
         javax.swing.tree.TreePath treePath = jTree1.getSelectionPath();
         if(treePath == null){
@@ -943,7 +950,7 @@ public class esportsFrame extends javax.swing.JFrame {
             jTextArea1.setText("");
             return;
         }
-        for(TeamArray teamCheck : myTeamArray){
+        for(TeamClass teamCheck : myTeamArray){
             if(selectedPath.contains(teamCheck.teamName)){
                 jTextArea1.setText(teamCheck.teamBio);
             }  
@@ -970,18 +977,10 @@ public class esportsFrame extends javax.swing.JFrame {
             indexz++;
             myTeamArray.get(mapping.getValue()).scoreboardPos = indexz;
         }
-        
         for(int i = 0; i < myTeamArray.size();i++){
-            TeamArray team = myTeamArray.get(i);
-            scoreTable.setValueAt(team.teamName, i, 0);
-            scoreTable.setValueAt(team.eventArray[0].eventScore,i,1);
-            scoreTable.setValueAt(team.eventArray[1].eventScore,i,2);
-            scoreTable.setValueAt(team.eventArray[2].eventScore,i,3);
-            scoreTable.setValueAt(team.eventArray[3].eventScore,i,4);
-            scoreTable.setValueAt(team.eventArray[4].eventScore,i,5);
+            TeamClass team = myTeamArray.get(i);
             scoreTable.setValueAt(team.overallScore,i,6);
             scoreTable.setValueAt(team.scoreboardPos, i, 7);               
-            
             for(Entry<Integer, Integer> mapping : mappings){
                 if(myTeamArray.get(mapping.getValue()).scoreboardPos == 1){
                     jLabel2.setText(myTeamArray.get(mapping.getValue()).teamName + " is the winner!!!");
@@ -992,6 +991,14 @@ public class esportsFrame extends javax.swing.JFrame {
             }                  
         }         
     }//GEN-LAST:event_calculateWinnerButtonActionPerformed
+
+    private void editBioTextAreaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_editBioTextAreaFocusLost
+       int selected = teamComboBox.getSelectedIndex();
+        //checks if ive just removed a team and now its null
+        if(selected >= 0){
+            myTeamArray.get(selected).teamBio=editBioTextArea.getText();
+        }
+    }//GEN-LAST:event_editBioTextAreaFocusLost
     
     static ScheduledExecutorService service;
     static int counter = 0;
