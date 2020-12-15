@@ -22,7 +22,6 @@
                 <Property name="text" type="java.lang.String" value="View Team Data"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="viewTeamDataItemMouseClicked"/>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewTeamDataItemActionPerformed"/>
               </Events>
             </MenuItem>
@@ -292,22 +291,25 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="eventLabel" min="-2" pref="102" max="-2" attributes="0"/>
+                              <EmptySpace min="399" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="eventLabel" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                                  <Component id="eventsScrollPane" alignment="1" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="selectedEventCombo" min="-2" pref="102" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="184" max="-2" attributes="0"/>
-                                      <Component id="selectedGameCombo" min="-2" pref="102" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="selectedGameCombo" min="-2" pref="160" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="103" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
-                          <Component id="eventsScrollPane" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -353,7 +355,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectedGameComboActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="ArrayList&lt;String&gt; events = new ArrayList&lt;String&gt;(); &#xa;        for (game_type type : game_type.values()){&#xa;            events.add(type.toString());&#xa;            &#xa;        }&#xa;        selectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new Vector&lt;String&gt;(events)));&#xa;        //5 is the iindex for NotSet&#xa;        //this shows the user that by defualt nothing is set so this is what i want for the time being until i start to clean up code&#xa;        selectedGameCombo.setSelectedIndex(5);"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="ArrayList&lt;String&gt; events = new ArrayList&lt;String&gt;(); &#xa;        for (game_type type : game_type.values()){&#xa;            if(type == game_type.NotSet)&#xa;                continue;&#xa;            events.add(type.toString());&#xa;        }&#xa;        selectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(new Vector&lt;String&gt;(events)));&#xa;        //5 is the iindex for NotSet&#xa;       //this shows the user that by defualt nothing is set so this is what i want for the time being until i start to clean up code&#xa;        selectedGameCombo.setSelectedIndex(-1);"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -419,42 +421,45 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="selectedTeamLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="playerNameTextField" alignment="0" pref="152" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Component id="addTeamPlayerButton" alignment="0" min="-2" pref="152" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="100" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="removeTeamPlayerButton" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane4" max="32767" attributes="0"/>
+                                  <Component id="bioLabel" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="teamNameField" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                                   <Component id="addTeamButton" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="isGuestCheckbox" alignment="1" min="-2" pref="152" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="saveButton" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="isGuestCheckbox" min="-2" pref="152" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="saveButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="loadButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="teamComboBox" min="-2" pref="152" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="removeTeamButton" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="addTeamPlayerButton" min="-2" pref="152" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="removeTeamPlayerButton" min="-2" pref="152" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="selectedTeamLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="playerNameTextField" alignment="0" pref="152" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
-                                  <Component id="bioLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -473,11 +478,13 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="addTeamButton" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="addTeamButton" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                              <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="removeTeamButton" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                               <Component id="loadButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -511,6 +518,7 @@
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Is Guest Team?"/>
+                <Property name="toolTipText" type="java.lang.String" value="are they playing but dont want to be counted"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[69, 20]"/>
                 </Property>
@@ -530,6 +538,7 @@
             <Component class="javax.swing.JButton" name="removeTeamButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Remove Selected Team"/>
+                <Property name="toolTipText" type="java.lang.String" value="Removes selected team from combobox"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeTeamButtonActionPerformed"/>
@@ -551,7 +560,8 @@
             </Component>
             <Component class="javax.swing.JTextField" name="teamNameField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Team Name"/>
+                <Property name="text" type="java.lang.String" value="Enter Team Name"/>
+                <Property name="toolTipText" type="java.lang.String" value="Enter a team name"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="teamNameFieldMouseClicked"/>
@@ -564,6 +574,7 @@
             <Component class="javax.swing.JTextField" name="playerNameTextField">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Player Name"/>
+                <Property name="toolTipText" type="java.lang.String" value="Enter Player name"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="playerNameTextFieldMouseClicked"/>
@@ -601,6 +612,7 @@
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="new DefaultListModel()&#xa;" type="code"/>
                     </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="Player list"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="Esports_Frame_TeamPlayerList"/>
@@ -619,6 +631,7 @@
             <Component class="javax.swing.JButton" name="saveButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save Data"/>
+                <Property name="toolTipText" type="java.lang.String" value="saves all data to a data file"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
@@ -627,6 +640,7 @@
             <Component class="javax.swing.JButton" name="loadButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Load Data"/>
+                <Property name="toolTipText" type="java.lang.String" value="Loads saved data file"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadButtonActionPerformed"/>
@@ -642,7 +656,9 @@
                 <Component class="javax.swing.JTextArea" name="editBioTextArea">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
+                    <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Team Bio"/>
                   </Properties>
                   <Events>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="editBioTextAreaFocusLost"/>
@@ -653,7 +669,7 @@
             <Component class="javax.swing.JLabel" name="bioLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="&quot;Selected Teams&apos; Bio&quot;" type="code"/>
+                  <Connection code="&quot;Selected Teams Bio&quot;" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -671,7 +687,10 @@
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="60" max="32767" attributes="0"/>
-                      <Component id="jScrollPane3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane3" min="-2" max="-2" attributes="0"/>
+                          <Component id="infoBioLabel" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -680,7 +699,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="infoBioLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jScrollPane3" max="32767" attributes="0"/>
@@ -738,6 +760,13 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JLabel" name="infoBioLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="&quot;Selected Teams Bio&quot;" type="code"/>
+                </Property>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

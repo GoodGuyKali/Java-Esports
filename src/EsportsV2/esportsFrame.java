@@ -32,13 +32,13 @@ enum game_type{
     COD,
     Valorant,
     Apex,
-    NotSet
+    NotSet,
 }
-class EventArray implements Serializable{
+class EventClass implements Serializable{
     game_type GameType;
     long eventPoints;
     long eventScore;
-    public EventArray(game_type typr){
+    public EventClass(game_type typr){
         GameType = typr;
     }
     public void calculateScore(javax.swing.JTable eventTable){
@@ -63,7 +63,7 @@ class EventArray implements Serializable{
                 eventTable.setValueAt(eventScore, eventTable.getSelectedRow(), 2);
                 break;
             case Apex:
-                eventScore = eventPoints*20;
+                eventScore = eventPoints*10;
                 eventTable.setValueAt(eventScore, eventTable.getSelectedRow(), 2);
                 break; 
         }
@@ -79,7 +79,7 @@ class PlayerData implements Serializable{
 class TeamClass implements Serializable{
     int scoreboardPos = 0;
     int overallScore=0;
-    EventArray eventArray[] = new EventArray[5];
+    EventClass eventArray[] = new EventClass[5];
     ArrayList<PlayerData> playersData = new ArrayList<>();
     String teamName;
     String teamBio;
@@ -88,12 +88,12 @@ class TeamClass implements Serializable{
     public TeamClass(String Teamname){
         teamName = Teamname;
         for (int i =0;i < eventArray.length; i++){
-            eventArray[i]= new EventArray(game_type.NotSet);
+            eventArray[i]= new EventClass(game_type.NotSet);
         }
     }
     public long calculateOverallScore(){
         int tmp=0;
-        for(EventArray event : eventArray){
+        for(EventClass event : eventArray){
            tmp+= event.eventScore;
             overallScore= tmp;
         }
@@ -109,9 +109,6 @@ class TeamClass implements Serializable{
 public class esportsFrame extends javax.swing.JFrame {
     ArrayList<TeamClass> myTeamArray = new ArrayList<>();
 
-    /**
-     *
-     */
     public void updateAllOverallScores(){
         for(TeamClass test : myTeamArray){
             if(!test.is_guest){
@@ -119,7 +116,6 @@ public class esportsFrame extends javax.swing.JFrame {
             }
         }
     }
-
 
     /**
      * Creates new form NewJFrame
@@ -172,6 +168,7 @@ public class esportsFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        infoBioLabel = new javax.swing.JLabel();
         jMenuBar2 = new javax.swing.JMenuBar();
         scoreboardMenu = new javax.swing.JMenu();
         teamsMenu = new javax.swing.JMenu();
@@ -263,13 +260,14 @@ public class esportsFrame extends javax.swing.JFrame {
 
         ArrayList<String> events = new ArrayList<String>();
         for (game_type type : game_type.values()){
+            if(type == game_type.NotSet)
+            continue;
             events.add(type.toString());
-
         }
         selectedGameCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new Vector<String>(events)));
         //5 is the iindex for NotSet
         //this shows the user that by defualt nothing is set so this is what i want for the time being until i start to clean up code
-        selectedGameCombo.setSelectedIndex(5);
+        selectedGameCombo.setSelectedIndex(-1);
         selectedGameCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectedGameComboActionPerformed(evt);
@@ -317,15 +315,17 @@ public class esportsFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(eventsPanelLayout.createSequentialGroup()
+                        .addComponent(eventLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(eventsPanelLayout.createSequentialGroup()
                         .addGroup(eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(eventLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(eventsScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(eventsPanelLayout.createSequentialGroup()
                                 .addComponent(selectedEventCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(184, 184, 184)
-                                .addComponent(selectedGameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 103, Short.MAX_VALUE))
-                    .addComponent(eventsScrollPane, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                                .addGap(18, 18, 18)
+                                .addComponent(selectedGameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,6 +343,7 @@ public class esportsFrame extends javax.swing.JFrame {
 
         isGuestCheckbox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         isGuestCheckbox.setText("Is Guest Team?");
+        isGuestCheckbox.setToolTipText("are they playing but dont want to be counted");
         isGuestCheckbox.setMaximumSize(new java.awt.Dimension(69, 20));
         isGuestCheckbox.setMinimumSize(new java.awt.Dimension(69, 20));
 
@@ -354,6 +355,7 @@ public class esportsFrame extends javax.swing.JFrame {
         });
 
         removeTeamButton.setText("Remove Selected Team");
+        removeTeamButton.setToolTipText("Removes selected team from combobox");
         removeTeamButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeTeamButtonActionPerformed(evt);
@@ -368,7 +370,8 @@ public class esportsFrame extends javax.swing.JFrame {
             }
         });
 
-        teamNameField.setText("Team Name");
+        teamNameField.setText("Enter Team Name");
+        teamNameField.setToolTipText("Enter a team name");
         teamNameField.addKeyListener(new KeyAdapter(){
             @Override
             //this is to stop the typer making their name stupidly long
@@ -389,6 +392,7 @@ public class esportsFrame extends javax.swing.JFrame {
         });
 
         playerNameTextField.setText("Player Name");
+        playerNameTextField.setToolTipText("Enter Player name");
         playerNameTextField.addKeyListener(new KeyAdapter(){
             @Override
             //this is to stop the typer making their name stupidly long
@@ -424,11 +428,13 @@ public class esportsFrame extends javax.swing.JFrame {
 
         teamPlayerList.setModel(new DefaultListModel()
         );
+        teamPlayerList.setToolTipText("Player list");
         jScrollPane1.setViewportView(teamPlayerList);
 
         selectedTeamLabel.setText("Selected Team");
 
         saveButton.setText("Save Data");
+        saveButton.setToolTipText("saves all data to a data file");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);
@@ -436,6 +442,7 @@ public class esportsFrame extends javax.swing.JFrame {
         });
 
         loadButton.setText("Load Data");
+        loadButton.setToolTipText("Loads saved data file");
         loadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadButtonActionPerformed(evt);
@@ -443,7 +450,9 @@ public class esportsFrame extends javax.swing.JFrame {
         });
 
         editBioTextArea.setColumns(20);
+        editBioTextArea.setLineWrap(true);
         editBioTextArea.setRows(5);
+        editBioTextArea.setToolTipText("Team Bio");
         editBioTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 editBioTextAreaFocusLost(evt);
@@ -451,7 +460,7 @@ public class esportsFrame extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(editBioTextArea);
 
-        bioLabel.setText("Selected Teams' Bio");
+        bioLabel.setText("Selected Teams Bio");
 
         javax.swing.GroupLayout teamPanelLayout = new javax.swing.GroupLayout(teamPanel);
         teamPanel.setLayout(teamPanelLayout);
@@ -462,34 +471,36 @@ public class esportsFrame extends javax.swing.JFrame {
                 .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, teamPanelLayout.createSequentialGroup()
                         .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addComponent(selectedTeamLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(playerNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                            .addComponent(addTeamPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(removeTeamPlayerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4)
+                            .addComponent(bioLabel)))
+                    .addGroup(teamPanelLayout.createSequentialGroup()
+                        .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(teamNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(addTeamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(isGuestCheckbox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, teamPanelLayout.createSequentialGroup()
-                                .addComponent(saveButton)
+                            .addGroup(teamPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(isGuestCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(teamPanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(loadButton)))
-                        .addGap(18, 18, 18)
+                                .addComponent(saveButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(loadButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(teamPanelLayout.createSequentialGroup()
                                 .addComponent(teamComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(2, 2, 2))
-                            .addComponent(removeTeamButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(teamPanelLayout.createSequentialGroup()
-                        .addComponent(addTeamPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(removeTeamPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(teamPanelLayout.createSequentialGroup()
-                        .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(selectedTeamLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(playerNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bioLabel))))
+                            .addComponent(removeTeamButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         teamPanelLayout.setVerticalGroup(
@@ -502,11 +513,12 @@ public class esportsFrame extends javax.swing.JFrame {
                     .addComponent(isGuestCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addTeamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(addTeamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(saveButton))
                     .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(removeTeamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(loadButton)
-                        .addComponent(saveButton)))
+                        .addComponent(loadButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(teamPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(selectedTeamLabel)
@@ -543,6 +555,8 @@ public class esportsFrame extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane3.setViewportView(jTextArea1);
 
+        infoBioLabel.setText("Selected Teams Bio");
+
         javax.swing.GroupLayout teamInfoPanelLayout = new javax.swing.GroupLayout(teamInfoPanel);
         teamInfoPanel.setLayout(teamInfoPanelLayout);
         teamInfoPanelLayout.setHorizontalGroup(
@@ -553,14 +567,18 @@ public class esportsFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(teamInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(infoBioLabel))
                 .addContainerGap())
         );
         teamInfoPanelLayout.setVerticalGroup(
             teamInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, teamInfoPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addGroup(teamInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(infoBioLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(teamInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane3)
@@ -627,11 +645,6 @@ public class esportsFrame extends javax.swing.JFrame {
         teamsMenu.setText("Teams");
 
         viewTeamDataItem.setText("View Team Data");
-        viewTeamDataItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                viewTeamDataItemMouseClicked(evt);
-            }
-        });
         viewTeamDataItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewTeamDataItemActionPerformed(evt);
@@ -673,7 +686,7 @@ public class esportsFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void PostTeamData(){
+    private void postTeamData(){
         int amount = teamComboBox.getItemCount();
         if(!teamNameField.getText().isEmpty()){
             for(TeamClass checkName : myTeamArray){
@@ -709,7 +722,7 @@ public class esportsFrame extends javax.swing.JFrame {
     }
    
     //will wipe the file and overwrite it
-    private void SaveData(String FileName){
+    private void saveData(String FileName){
         try{
             FileOutputStream fileout = new FileOutputStream(FileName);
             ObjectOutputStream objectout = new ObjectOutputStream(fileout);
@@ -720,7 +733,7 @@ public class esportsFrame extends javax.swing.JFrame {
         catch(Exception e){}
     }
     
-    private void LoadData(String FileName){
+    private void loadData(String FileName){
         try {
             FileInputStream in = new FileInputStream(FileName);
             ObjectInputStream is = new ObjectInputStream(in);
@@ -735,17 +748,11 @@ public class esportsFrame extends javax.swing.JFrame {
             }
             in.close();
             is.close();
-            
         }catch(Exception e){
             System.out.println(e.getStackTrace());
         }
     }
     
-    //remove
-    private void viewTeamDataItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewTeamDataItemMouseClicked
-
-    }//GEN-LAST:event_viewTeamDataItemMouseClicked
-
     private void viewTeamDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewTeamDataItemActionPerformed
         eventsPanel.setVisible(false);
         scorePanel.setVisible(false);
@@ -766,9 +773,16 @@ public class esportsFrame extends javax.swing.JFrame {
     private void selectedEventComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedEventComboActionPerformed
         String Selected_event = (String)selectedEventCombo.getSelectedItem();
         eventLabel.setText(Selected_event);
-        selectedGameCombo.setSelectedIndex(myTeamArray.get(0).eventArray[selectedEventCombo.getSelectedIndex()].GameType.ordinal());
-
-        EventArray TestCase;
+        int gameType = myTeamArray.get(0).eventArray[selectedEventCombo.getSelectedIndex()].GameType.ordinal();
+        if(gameType == game_type.NotSet.ordinal()){
+            selectedGameCombo.setSelectedIndex(-1);
+            selectedGameCombo.getModel().setSelectedItem("Please select a Game");
+        }
+        else {
+            selectedGameCombo.setSelectedIndex(gameType);
+        }
+        
+        EventClass TestCase;
         for(int i = 0; i < myTeamArray.size();i++){
             TestCase = myTeamArray.get(i).eventArray[selectedEventCombo.getSelectedIndex()];
             eventTable.setValueAt(TestCase.eventPoints, i, 1);
@@ -807,7 +821,7 @@ public class esportsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_eventTablePropertyChange
 
     private void addTeamButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTeamButtonActionPerformed
-        PostTeamData();
+        postTeamData();
     }//GEN-LAST:event_addTeamButtonActionPerformed
 
     private void removeTeamButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTeamButtonActionPerformed
@@ -844,7 +858,7 @@ public class esportsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_teamNameFieldMouseClicked
 
     private void teamNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teamNameFieldActionPerformed
-        PostTeamData();
+        postTeamData();
     }//GEN-LAST:event_teamNameFieldActionPerformed
 
     private void playerNameTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playerNameTextFieldMouseClicked
@@ -860,7 +874,8 @@ public class esportsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addTeamPlayerButtonActionPerformed
 
     private void removeTeamPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTeamPlayerButtonActionPerformed
-int selectedTeam = teamComboBox.getSelectedIndex();
+
+        int selectedTeam = teamComboBox.getSelectedIndex();
         if(selectedTeam == -1){
             System.out.println("please select a Team");
         }
@@ -875,11 +890,11 @@ int selectedTeam = teamComboBox.getSelectedIndex();
     }//GEN-LAST:event_removeTeamPlayerButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        SaveData("Data.dat");
+        saveData("Data.dat");
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
-        LoadData("Data.dat");
+        loadData("Data.dat");
     }//GEN-LAST:event_loadButtonActionPerformed
 
     private void scoreboardMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scoreboardMenuMouseClicked
@@ -901,9 +916,11 @@ int selectedTeam = teamComboBox.getSelectedIndex();
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
             };
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -929,15 +946,23 @@ int selectedTeam = teamComboBox.getSelectedIndex();
         scorePanel.setVisible(false);
         teamInfoPanel.setVisible(false);
         String Selected_event = (String)selectedEventCombo.getSelectedItem();
+        if(selectedGameCombo.getSelectedIndex() == -1){
+           selectedGameCombo.getModel().setSelectedItem("Please select a Game");
+        }
         eventLabel.setText(Selected_event); 
         eventsPanel.setVisible(true);
     }//GEN-LAST:event_eventMenuMouseClicked
 
     private void editTeamDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editTeamDataItemActionPerformed
         eventsPanel.setVisible(false);
-        teamPanel.setVisible(true);
+        
         scorePanel.setVisible(false);
         teamInfoPanel.setVisible(false);
+       // -1
+       if(teamComboBox.getSelectedIndex() == -1){
+           teamComboBox.getModel().setSelectedItem("Selected Team");
+       }
+       teamPanel.setVisible(true);
     }//GEN-LAST:event_editTeamDataItemActionPerformed
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
@@ -953,15 +978,14 @@ int selectedTeam = teamComboBox.getSelectedIndex();
         for(TeamClass teamCheck : myTeamArray){
             if(selectedPath.contains(teamCheck.teamName)){
                 jTextArea1.setText(teamCheck.teamBio);
+                infoBioLabel.setText(teamCheck.teamName+"'s Bio");
             }  
         }
     }//GEN-LAST:event_jTree1ValueChanged
 
     private void calculateWinnerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateWinnerButtonActionPerformed
-
         updateAllOverallScores();
-        javax.swing.table.DefaultTableModel test = (javax.swing.table.DefaultTableModel)scoreTable.getModel();
-        HashMap<Integer, Integer> OverallScore = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> OverallScore = new HashMap<>();
         
         for (int i =0;i < myTeamArray.size();i++){
             OverallScore.put(myTeamArray.get(i).overallScore,i);
@@ -969,7 +993,7 @@ int selectedTeam = teamComboBox.getSelectedIndex();
         
         int indexz=0;
         TreeMap<Integer, Integer> sorted = new TreeMap<>(OverallScore); 
-        TreeMap<Integer,Integer> reversedSortedMap = new TreeMap<Integer,Integer>(Collections.reverseOrder());
+        TreeMap<Integer,Integer> reversedSortedMap = new TreeMap<>(Collections.reverseOrder());
         reversedSortedMap.putAll(sorted);
         Set<Entry<Integer, Integer>> mappings = reversedSortedMap.entrySet();
         
@@ -1004,18 +1028,17 @@ int selectedTeam = teamComboBox.getSelectedIndex();
     static int counter = 0;
     void showWinner(){
 
-        Runnable runnable = new Runnable() {
-            public void run() {
-                // task to run goes here
-                if (counter++ >= 6) {
-                    service.shutdown();
-                    counter = 0;
+        Runnable runnable;
+        runnable = () -> {
+            // task to run goes here
+            if (counter++ >= 6) {
+                service.shutdown();
+                counter = 0;
+            } else {
+                if (counter % 2 == 1) {
+                    jLabel2.setForeground(Color.red);
                 } else {
-                    if (counter % 2 == 1) {
-                        jLabel2.setForeground(Color.red);
-                    } else {
-                        jLabel2.setForeground(Color.blue);
-                    }
+                    jLabel2.setForeground(Color.blue);
                 }
             }
         };
@@ -1060,6 +1083,7 @@ int selectedTeam = teamComboBox.getSelectedIndex();
     private javax.swing.JTable eventTable;
     private javax.swing.JPanel eventsPanel;
     private javax.swing.JScrollPane eventsScrollPane;
+    private javax.swing.JLabel infoBioLabel;
     private javax.swing.JCheckBox isGuestCheckbox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
